@@ -2,15 +2,87 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>www.loksaieta.com</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puggle Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        #board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            gap: 5px;
+        }
+        .tile {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #007bff;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .empty {
+            background-color: transparent;
+            cursor: default;
+        }
+    </style>
 </head>
 <body>
-  <div class="jumbotron" style="background-color:white">
-      <img src="https://octodex.github.com/images/spidertocat.png" alt="Spidertocat"
-           class="img-responsive center-block" style="width:250px"/>
-      <h2 class="text-center">Hello Team</h2>
-      <p class="text-center">Spring Boot Web Application - CI/CD automation using webhook & pollscm ! </p>
-  </div>
+    <h1>Puggle Game</h1>
+    <div id="board"></div>
+    <button onclick="initGame()">Reset Game</button>
+
+    <script>
+        const boardElement = document.getElementById('board');
+        let tiles = [];
+
+        function initGame() {
+            tiles = [1, 2, 3, 4, 5, 6, 7, 8, null]; // Using null for the empty tile
+            shuffle();
+            render();
+        }
+
+        function shuffle() {
+            for (let i = tiles.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [tiles[i], tiles[j]] = [tiles[j], tiles[i]];
+            }
+        }
+
+        function render() {
+            boardElement.innerHTML = '';
+            tiles.forEach((tile, index) => {
+                const tileElement = document.createElement('div');
+                tileElement.className = 'tile' + (tile === null ? ' empty' : '');
+                tileElement.innerText = tile !== null ? tile : '';
+                tileElement.onclick = () => handleTileClick(index);
+                boardElement.appendChild(tileElement);
+            });
+        }
+
+        function handleTileClick(index) {
+            const emptyIndex = tiles.indexOf(null);
+            const validMoves = [emptyIndex - 1, emptyIndex + 1, emptyIndex - 3, emptyIndex + 3]; // Left, Right, Up, Down
+
+            if (validMoves.includes(index)) {
+                tiles[emptyIndex] = tiles[index];
+                tiles[index] = null;
+                render();
+            }
+        }
+
+        // Initialize the game on page load
+        window.onload = initGame;
+    </script>
 </body>
 </html>
