@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: loksai-eta-container
-        image: loksaieta/sa-wd-webapp
+        image: sanjaysan01/tomcat-webappimg
         ports:
         - containerPort: 8080
 ---
